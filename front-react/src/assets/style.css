@@ -1,0 +1,177 @@
+#root{
+    background-color: #f5f5f5f2;
+}
+
+.pdf-container{
+    width: 100%;
+    height: 900px;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.div-margin-top{
+    margin-top: 25vh !important;
+}
+
+.signHeader{
+    display: flex;
+    justify-content: space-between;
+    /*border-bottom: 1px solid #e0e0e0;*/
+    z-index: 100;
+    /*position: fixed;
+    left: 0;
+    width: 100%;*/
+    background-color: white;
+    margin: 15px;
+    border-radius: 7px;
+    padding: 7px;
+}
+
+.signOption{
+    display: flex;
+    align-items: center;
+}
+
+.blockSignature{
+    background-color: white;
+    /*height: 100vh;*/
+    margin: 15px;
+  border-radius: 7px;
+  padding: 7px;
+}
+
+.sidebar{
+    background-color: darkcyan;
+    width: 20%;
+    height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.parentContainer{
+    display: flex;
+    overflow-x: hidden;
+    width: 100%;
+    /*margin-left: 20%;*/
+}
+
+.signContainer{
+    /*width: 79.8%;*/
+    flex-grow: 1;
+    height: 100vh;
+}
+
+.css-cz4sdx .MuiTextField-root {
+	width: auto !important;
+}
+
+.titleApp{
+    font-family: "Ribeye", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.divTitle{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+}
+
+.styleHr {
+	width: 78%;
+	text-align: center;
+	margin-left: 10%;
+}
+
+.about-div {
+    background-color: #E97B7B;
+    width: 65px;
+    height: 65px;
+    border-radius: 35px;
+    /*float : right;
+    padding-right: 0;*/
+    display: flex;
+}
+
+
+.email-span{
+    margin: auto;
+    font-size: 25px;
+}
+
+
+.popup {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    right: 0;
+    top: 100%;
+    z-index: 1000;
+  }
+  
+  .popup button {
+    background: #fb7c7c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .popup button:hover {
+    background: darkred;
+  }
+
+  .btn-historique:hover {
+    background: #c8c1c129 !important;
+    border-radius: 5px;
+  }
+
+  .aboutUser {
+    display: flex;
+    justify-content: flex-end;
+    /*margin-bottom: 40px;*/
+    position: relative;
+
+}
+
+.about-div {
+    background-color: #E97B7B;
+    width: 65px;
+    height: 65px;
+    border-radius: 35px;
+    /*float : right;
+    padding-right: 0;*/
+    display: flex;
+}
+
+.uploadFile{
+    margin: 15px;
+  border-radius: 7px;
+  padding: 7px;
+}
+
+.bg-background {
+    background-color: cornsilk !important;
+  }
+  
+  .border {
+    border-width: 1px !important;
+  }
+  .gap-4 {
+    gap: 1rem !important;
+  }
+  
+  .sm\:rounded-lg {
+    border-radius: 5px !important;
+  }
+
+  .downloadHistory:hover {
+    color :blue;
+  }
