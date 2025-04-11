@@ -90,7 +90,7 @@ function App() {
       <div>
       <Router>
         <Routes>
-          <Route path='/' element={<ProtectedRoute> <Index getHistorique={getHistorique} listHistorique={listHistorique} surName={surName} /> </ProtectedRoute>} />
+          <Route path='/' element={ <Index getHistorique={getHistorique} listHistorique={listHistorique} surName={surName} />} />
           <Route path='/login' element={<ProtectedAuth><Login setSurname={setSurname} /></ProtectedAuth>} />
           <Route path='/register' element={<ProtectedAuth><Register setSurname={setSurname} /></ProtectedAuth>  } />
         </Routes>

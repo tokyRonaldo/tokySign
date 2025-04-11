@@ -29,11 +29,32 @@ function Home({titre,phone,nom,email,adresse,setErrors,getHistorique}) {
     const [totalPages, setTotalPages] = useState(1);
     const token= localStorage.getItem('token');
     const [isDragging, setIsDragging] = useState(false)
-
+    const [disableSign, setDisableSign] = useState(false)
+    
     useEffect(() => {
         pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`;
 
     }, []);
+
+    useEffect(()=>{
+
+        const storedId = localStorage.getItem("anon_id");
+        const expiresAt = localStorage.getItem("anon_id_expires");
+        const isLogin = localStorage.getItem("token");
+
+        if(!isLogin){
+            if ( storedId && expiresAt && new Date() < new Date(expiresAt)) {
+                setDisableSign(true);
+                console.log("ID valide :", storedId);
+            }
+            else{
+                setDisableSign(true);
+            }
+        }
+        else{
+            setDisableSign(false)
+        }
+    },[60000])
 
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -172,6 +193,20 @@ function Home({titre,phone,nom,email,adresse,setErrors,getHistorique}) {
             if (response.ok) {
                 console.log(response);
                 alert("PDF signé sauvegardé avec succès !");
+               const isLogin = localStorage.getItem("token");
+
+                if(!isLogin){
+    
+                        //stocke dans une session pour les utilisateurs non connectes
+                        const anonId = crypto.randomUUID();
+                        const expiresAt = new Date();
+                        expiresAt.setDate(expiresAt.getDate() + 1); // +1 jour
+                        localStorage.setItem("anon_id", crypto.randomUUID());
+                        localStorage.setItem("anon_id", anonId);
+                        localStorage.setItem("anon_id_expires", expiresAt.toISOString());
+                        setDisableSign(true);
+                    
+                }
             } else {
                 alert("Erreur lors de l'enregistrement du PDF.");
             }
@@ -248,11 +283,6 @@ function Home({titre,phone,nom,email,adresse,setErrors,getHistorique}) {
             <h2 className="text-xl font-medium mb-6">Sélectionnez le document à signer:</h2>
 
             <div 
-             className={`border-2 border-dashed ${isDragging ? 'border-teal-500 bg-teal-50' : 'border-gray-300'} rounded-lg p-8 mb-6 text-center transition-colors duration-200`}
-             onDragEnter={handleDragEnter}
-             onDragOver={handleDragOver}
-             onDragLeave={handleDragLeave}
-             onDrop={handleDrop}
             >
                 {fileName ? (
                     <div className="flex items-center justify-between bg-gray-50 p-3 rounded">
@@ -268,7 +298,18 @@ function Home({titre,phone,nom,email,adresse,setErrors,getHistorique}) {
                     </Button>
                     </div>
                 ) : (
-                    <div>
+                    <div
+                    className={`border-2 border-dashed ${isDragging ? 'border-teal-500 bg-teal-50' : 'border-gray-300'} rounded-lg p-8 mb-6 text-center transition-colors duration-200
+                    ${
+                        disableSign ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''
+                      }
+                    `}
+                    onDragEnter={handleDragEnter}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+       
+                    >
                     <Upload className="h-12 w-12 text-gray-400 mx-auto mb-2" />
                     <p className="text-gray-500 mb-4">Glissez-déposez votre fichier ici ou</p>
                     <Button className="relative bg-teal-600 hover:bg-teal-700">

@@ -35,13 +35,13 @@ const{
     console.log('trest');
 })*/
 
-router.post('/add',upload.any(),signMiddleware,addSign);
+router.post('/add',upload.any(),addSign);
 
 router.post('/login',login);
 
 router.post('/register',register);
 
-router.get('/signHistorique',signMiddleware,signHistorique);
+router.get('/signHistorique',signHistorique);
 
 router.get('/downloadHistorique/:id',downloadHistorique);
 
