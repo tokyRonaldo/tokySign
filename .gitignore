@@ -1,0 +1,42 @@
+# --- Général ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.DS_Store
+.env
+.env.local
+.env.*.local
+
+# --- Logs ---
+logs
+*.log
+*.log.*
+*.out
+*.pid
+*.seed
+*.pid.lock
+
+# --- Build React ---
+/front-react/build
+/front-react/.next
+/front-react/.turbo
+/front-react/.cache
+/front-react/dist
+
+# --- Build Node.js ---
+/back-node/dist
+/back-node/build
+/back-node/coverage
+/back-node/uploads/
+
+# --- IDE / OS ---
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db

@@ -18,7 +18,7 @@ const addSign = async (req,res)=>{
         }));
     }    //const addSignature= await signModel.insert
     */
-   let signed=null;
+   /*let signed=null;
    let original=null;
    if (req.files){
      req.files.forEach(file=> {
@@ -29,10 +29,10 @@ const addSign = async (req,res)=>{
             original = file.path
         }
     })
-    }
+    }*/
     const fileData={
-        pdf_signed: signed,  // Utilise le chemin du fichier
-        pdf_original: original, // Stocke aussi le nom original
+        pdf_signed: details.file_new,  // Utilise le chemin du fichier
+        pdf_original: details.file_original, // Stocke aussi le nom original
         file_name: details.file_name, // Stocke aussi le nom original
         user_id: req.user ? req.user._id : null // Récupère l'ID de l'utilisateur (ajuste selon ton auth)
 
@@ -101,13 +101,30 @@ const downloadHistorique= async(req,res)=>{
         }
     
         //const file_path= path.join(__dirname,'..','uploads',file.pdf_signed); 
-        const file_path= path.join(__dirname,'..','',file.pdf_signed); //recuperer le chemin du fichier
+        //const file_path= path.join(__dirname,'..','',file.pdf_signed); //recuperer le chemin du fichier
         console.log('---------test---------------')
-        console.log(file_path);
+        /*console.log(file_path);
         if(!fs.existsSync(file_path)){
             return res.status(401).json({error:'fichier introuvable sur le serveur'})
-        }
-        return res.download(file_path, file.file_name); //telecharger le fichier
+        }*/
+        console.log(' etooooo')
+        //return res.download(file.pdf_signed, file.file_name); //telecharger le fichier
+        return res.json(file);
+         // Pour une URL Cloudinary, on fait un fetch puis on stream
+    //const fetch = require('node-fetch'); // npm install node-fetch si pas installé
+    
+    //const response = await fetch(file.pdf_signed);
+    
+    /*if (!response.ok) {
+      return res.status(404).json({ error: 'Fichier introuvable sur Cloudinary' });
+    }*/
+
+    // Définir les headers pour le téléchargement
+    //res.setHeader('Content-Disposition', `attachment; filename="${file.file_name || 'document.pdf'}"`);
+    //res.setHeader('Content-Type', 'application/pdf');
+    
+    // Stream le fichier directement au client
+    //response.body.pipe(res);
     }
     catch(error){
         return res.status(500).json({error: 'Erreur lors du téléchargement'})

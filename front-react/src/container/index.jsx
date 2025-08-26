@@ -36,6 +36,9 @@ function Index({getHistorique,listHistorique,surName}) {
   const[adresse, setAdresse] = useState('')
   const [errors, setErrors] = useState({});
   const [isOpen, setIsOpen] = useState(true);
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const token= localStorage.getItem('token');
+
 
   const signContainerRef = useRef(0);
   const sidebarRef = useRef(0);
@@ -93,6 +96,32 @@ function Index({getHistorique,listHistorique,surName}) {
       });
     }
   }
+
+  const downloadHistorique = async(item)=>{
+    console.log(item);
+    /*const response = await fetch(`${apiUrl}/sign/downloadHistorique/${item._id}`,{
+      method : 'GET',
+      headers :{
+        "Content-Type": "application/json",
+        'Authorization' : 'Bearer ' + token
+      }
+    })
+    if (!response.ok) {
+      console.log('Erreur lors du téléchargement');
+      return;
+    }*/
+    console.log(item.pdf_signed.replace("/upload/", "/upload/fl_attachment/"))
+    const link = document.createElement("a");
+    link.href = item.pdf_signed.replace("/upload/", "/upload/fl_attachment/");
+    link.download = item.file_name || "document.pdf";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+  
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);    
+  }
+  
 
   return (
     <div className="parentContainer" >
@@ -212,8 +241,8 @@ function Index({getHistorique,listHistorique,surName}) {
             </DndContext>
       </div>
       <div className={isOpen ? "signContainer signContainerPartial" :"signContainer signContainerFull"} ref={signContainerRef}>
-      <Header headerHeight={headerHeight} setHeaderHeight={setHeaderHeight} setIsOpen={setIsOpen} isOpen={isOpen} listHistorique={listHistorique} surName={surName} />
-      <Home titre={titre} phone={phone} nom={nom} email={email} adresse={adresse} setErrors={setErrors} getHistorique={getHistorique} />
+      <Header headerHeight={headerHeight} setHeaderHeight={setHeaderHeight} setIsOpen={setIsOpen} isOpen={isOpen} listHistorique={listHistorique} surName={surName} downloadHistorique={downloadHistorique} />
+      <Home titre={titre} phone={phone} nom={nom} email={email} adresse={adresse} setErrors={setErrors} getHistorique={getHistorique} downloadHistorique={downloadHistorique} />
 
       </div>
 

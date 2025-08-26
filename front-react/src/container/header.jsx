@@ -29,7 +29,7 @@ import {
   } from "@/components/ui/table"
 
 
-function Header({headerHeight,setHeaderHeight,isOpen,setIsOpen,listHistorique , surName}) {
+function Header({headerHeight,setHeaderHeight,isOpen,setIsOpen,listHistorique , surName,downloadHistorique}) {
   const [count, setCount] = useState(0);
   const [isUserOpen, setIsUserOpen] = useState(false);
   const [login, setLogin] = useState(null);
@@ -69,21 +69,6 @@ function Header({headerHeight,setHeaderHeight,isOpen,setIsOpen,listHistorique , 
     };
 }, [headerHeight]);
 
-
-const downloadHistorique = async(item)=>{
-  const response = await fetch(`${apiUrl}/sign/downloadHistorique/${item._id}`,{
-    method : 'GET',
-    headers :{
-      "Content-Type": "application/json",
-      'Authorization' : 'Bearer ' + token
-    }
-  })
-  if (!response.ok){
-    console.log('error');
-    return ;
-  }
-  console.log(response);
-}
 
   return (
             <div className="signHeader" ref={headerRef}>

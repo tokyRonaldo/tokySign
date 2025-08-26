@@ -12,10 +12,12 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { Upload, FileText, X, Save, Clock, Menu, ChevronLeft, ChevronRight,Calendar,Download } from 'lucide-react'
+import { Modal, Form } from "react-bootstrap";
+import toast from 'react-hot-toast';
 
   
 
-function Home({titre,phone,nom,email,adresse,setErrors,getHistorique}) {
+function Home({titre,phone,nom,email,adresse,setErrors,getHistorique,downloadHistorique}) {
     const [fileName, setFileName] = useState(null)
     const [pdfFile, setPdfFile] = useState(null);
     const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
@@ -24,6 +26,9 @@ function Home({titre,phone,nom,email,adresse,setErrors,getHistorique}) {
     const pdfContainerRef = useRef(null);
     const [signaturePosition, setSignaturePosition] = useState({ x: 50, y: 50 });
     const [dragging, setDragging] = useState(false);
+    const [showModalSuccess, setShowModalSuccess] = useState(false);
+    const [fileUploaded, setFileUploaded] = useState({});
+    
     const [offset, setOffset] = useState({ x: 0, y: 0 });
     const [signaturePage, setSignaturePage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -166,12 +171,51 @@ function Home({titre,phone,nom,email,adresse,setErrors,getHistorique}) {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+
+    const uploadToCloudinary = async (file) => {
+        console.log('essssssssssssaooooooo')
+        const data = new FormData();
+        data.append("file", file);
+        data.append("upload_preset", "ml_default"); // nom du preset à créer dans Cloudinary
+        //data.append("resource_type", "raw");
+      
+        const res = await fetch(`https://api.cloudinary.com/v1_1/dmcdb4zcy/upload`, {
+          method: "POST",
+          body: data,
+        });
+      
+  
+/*       const json = await res.json();
+        console.log('Réponse Cloudinary:', json);
+        return json.secure_url;
+
+        // Ajouter des paramètres pour forcer l'affichage PDF
+  const displayUrl = json.secure_url.replace('/upload/', '/upload/fl_attachment,f_auto/');
+  console.log('URL avec paramètres:', displayUrl);
+  
+  return displayUrl;*/
+  const json = await res.json();
+  console.log('PDF uploadé sans conversion:', json);
+  
+  return json.secure_url; 
+      };
     
     const uploadSignedPdf = async (blob,pdfFile) => {
         if(!validateForm()) return;
         const formData = new FormData();
-        formData.append("file_new", blob, "document_signe.pdf");
-        formData.append("file_original", pdfFile, "document_original.pdf");
+        if (blob) {
+            const file_new =await uploadToCloudinary(blob);
+            console.log(file_new);
+            formData.append("file_new", file_new);
+        }
+        if (pdfFile) {
+            const file_original =await uploadToCloudinary(pdfFile);
+            formData.append("file_original", file_original);
+            console.log(file_original);
+          }
+
+        //formData.append("file_new", blob, "document_signe.pdf");
+        //formData.append("file_original", pdfFile, "document_original.pdf");
         formData.append("file_name", fileName);
         formData.append("titre", titre);
         formData.append("nom", nom);
@@ -181,7 +225,7 @@ function Home({titre,phone,nom,email,adresse,setErrors,getHistorique}) {
         const apiUrl = import.meta.env.VITE_API_URL;
     
         try {
-            const response = await fetch(`${apiUrl}/sign/add`, {
+            const result = await fetch(`${apiUrl}/sign/add`, {
                 method: "POST",
                 headers: {
                     //"Content-Type": "application/json",
@@ -189,10 +233,12 @@ function Home({titre,phone,nom,email,adresse,setErrors,getHistorique}) {
                 },
                 body: formData
             });
-    
-            if (response.ok) {
+
+            if (result.ok) {
+                const response= await result.json();
                 console.log(response);
-                alert("PDF signé sauvegardé avec succès !");
+                setShowModalSuccess(true)
+                setFileUploaded(response);
                const isLogin = localStorage.getItem("token");
 
                 if(!isLogin){
@@ -208,10 +254,11 @@ function Home({titre,phone,nom,email,adresse,setErrors,getHistorique}) {
                     
                 }
             } else {
-                alert("Erreur lors de l'enregistrement du PDF.");
+                toast.error("Erreur lors de l'enregistrement du PDF.");
+
             }
         } catch (error) {
-            console.error("Erreur lors de l'envoi du fichier :", error);
+            toast.error("Erreur lors de l'envoi du fichier :", error);
         }
         setShowPdf(false);
         clearFile()
@@ -276,6 +323,10 @@ function Home({titre,phone,nom,email,adresse,setErrors,getHistorique}) {
     const handleClearSignature = () => {
         signCanvas.current.clear();
     };
+
+    const handleCloseModal = ()=> {
+        setShowModalSuccess(false);
+    }
 
     return (
     <>
@@ -449,6 +500,28 @@ onMouseUp={handleMouseUp}>
             </div>
 
         </div>
+        <Modal show={showModalSuccess} onHide={handleCloseModal} centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Télechargement</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                Voulez vous télecharger le fichier signé?
+            </Modal.Body>
+            <Modal.Footer>
+                <Button className="bg-red-600 hover:bg-red-700" onClick={handleCloseModal} >
+                    Annuler
+                </Button>
+                <Button className="bg-emerald-600 hover:bg-emerald-700"  onClick={() =>{ 
+                    handleCloseModal();
+                    downloadHistorique(fileUploaded)
+                    }}>
+                    Oui
+                </Button>
+            </Modal.Footer>
+        </Modal>
+
+
+
 
     </>
         
